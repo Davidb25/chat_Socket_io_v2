@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat_socket.io</title>
+
+    <style>
+        #messages {
+            border: 1px solid black;
+            height: 90vh;
+        }
+
+        #messages p{
+            margin: 0;
+            padding: 10px;
+        }
+
+        #messages :nth-child(odd) {
+            background-color: #AAA;
+        }
+
+        #texte_client {
+            width:60%;
+            padding: 10px;            
+        }
+        #bouton_valide {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background-color: #839c49;
+            color: white;            
+        }  
+
+    </style>
+
+</head>
+<body>
+
+<!--Connection à la socket depuis coté client-->
+<script src='/socket.io/socket.io.js'></script>
+<script>
+    var socket = io();
+    //var socket = io('http://localhost:3000/');
+
+    // Fonction pour l'envoi des messages sur le serveur
+    var send = function() {
+        var text = document.getElementById('texte_client').value;
+        socket.emit('chat_message' ,text);
+    }
+
+    // Réception du message et ajout dans la liste côté client
+    var receive = function(msg) {
+        var li  = document.createElement('li');
+        li.innerText = msg;
+        document.getElementById('messages').appendChild(li);
+    }
+
+    socket.on('chat_message', receive);
+
+</script>
+
+    <div>
+        <ul id="messages"></ul>
+        <div class="zone_saisie">
+            <input id="texte_client"/><button onclick="send()">Envoyer</button>
+        </div>
+    </div>
+</body>
+</html>
